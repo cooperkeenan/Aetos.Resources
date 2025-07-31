@@ -1,0 +1,14 @@
+﻿# Example configuration - copy to terraform.tfvars in each environment
+
+resource_group_name = "myapp-ENVIRONMENT-rg"
+location           = "East US"
+vm_name            = "myapp-ENVIRONMENT-vm"
+vm_size            = "Standard_B2s"
+admin_username     = "azureuser"
+admin_password     = "YourSecurePassword123!"
+
+# Optional: Use existing snapshot/disk
+# source_image_id = "/subscriptions/YOUR-SUBSCRIPTION-ID/resourceGroups/YOUR-RG/providers/Microsoft.Compute/disks/YOUR-DISK-NAME"
+
+# Security: Replace with your IP range
+allowed_ssh_ips = ["YOUR.IP.ADDRESS/32"]
