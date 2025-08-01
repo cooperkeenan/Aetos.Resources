@@ -46,5 +46,31 @@ variable "environment" {
 variable "allowed_ssh_ips" {
   description = "List of IPs allowed for SSH access"
   type        = list(string)
-  default     = ["0.0.0.0/0"]  # Change this!
+  default     = ["*"] 
 }
+
+
+variable "github_user" {
+  description = "GitHub username"
+  type        = string
+  default     = "cooperkeenan"
+}
+
+variable "repo_name" {
+  description = "GitHub repository name"
+  type        = string
+  default     = "Aetos.Searcher"
+}
+
+variable "branch" {
+  description = "Git branch to use"
+  type        = string
+  default     = "main"
+}
+
+variable "service_name" {
+  description = "Name of the systemd service"
+  type        = string
+  default     = "aetos-autorun"
+}
+

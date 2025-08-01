@@ -38,4 +38,8 @@ module "dev_vm" {
   source_image_id     = var.source_image_id
   environment         = "dev"
   allowed_ssh_ips     = var.allowed_ssh_ips
+  github_user         = var.github_user
+  repo_name           = var.repo_name         
+  branch              = var.branch           
+  service_name        = var.service_name       
 }
