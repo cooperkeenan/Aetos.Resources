@@ -1,0 +1,60 @@
+#cloud-config
+package_update: true
+package_upgrade: true
+
+packages:
+  - git
+  - nodejs
+  - npm
+
+
+# Create your application user
+users:
+  - name: appuser
+    system: true
+    shell: /bin/bash
+    home: /opt/myapp
+
+# Create service file
+write_files:
+  - path: /etc/systemd/system/${service_name}.service
+    content: |
+      [Unit]
+      Description=${service_name} Application
+      After=network.target
+      
+      [Service]
+      Type=simple
+      User=appuser
+      WorkingDirectory=/opt/myapp
+      ExecStart=/opt/myapp/run.sh
+      Restart=always
+      RestartSec=10
+      
+      [Install]
+      WantedBy=multi-user.target
+    permissions: '0644'
+
+  - path: /opt/myapp/run.sh
+    content: |
+      #!/bin/bash
+      cd /opt/myapp
+      
+      # Clone or update repo
+      if [ -d ".git" ]; then
+        git pull
+      else
+        git clone ${repo_url} .
+      fi
+      
+      # Install dependencies and run
+      npm install
+      npm start
+    permissions: '0755'
+    owner: appuser:appuser
+
+runcmd:
+  - chown -R appuser:appuser /opt/myapp
+  - systemctl daemon-reload
+  - systemctl enable ${service_name}
+  - systemctl start ${service_name}

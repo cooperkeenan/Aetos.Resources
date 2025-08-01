@@ -1,4 +1,13 @@
-﻿# Create virtual network
+﻿# Create cloud-init script
+locals {
+  cloud_init = base64encode(templatefile("${path.module}/cloud-init.yaml", {
+    repo_url = var.repo_url
+    service_name = var.service_name
+  }))
+}
+
+
+# Create virtual network
 resource "azurerm_virtual_network" "main" {
   name                = "${var.vm_name}-vnet"
   address_space       = ["10.0.0.0/16"]
@@ -121,7 +130,9 @@ resource "azurerm_linux_virtual_machine" "main" {
   admin_username      = var.admin_username
   admin_password      = var.admin_password
 
-  disable_password_authentication = false
+  disable_password_authentication = true
+
+  custom_data = local.cloud_init
 
   network_interface_ids = [
     azurerm_network_interface.main.id,
@@ -142,6 +153,26 @@ resource "azurerm_linux_virtual_machine" "main" {
   boot_diagnostics {
     storage_account_uri = azurerm_storage_account.main.primary_blob_endpoint
   }
+
+  tags = {
+    Environment = var.environment
+  }
+}
+
+
+resource "azurerm_virtual_machine_extension" "setup" {
+  name                 = "setup-application"
+  virtual_machine_id   = azurerm_linux_virtual_machine.main.id
+  publisher            = "Microsoft.Azure.Extensions"
+  type                 = "CustomScript"
+  type_handler_version = "2.1"
+
+  settings = jsonencode({
+    script = base64encode(templatefile("${path.module}/setup.sh", {
+      repo_url = var.repo_url
+      service_name = var.service_name
+    }))
+  })
 
   tags = {
     Environment = var.environment
