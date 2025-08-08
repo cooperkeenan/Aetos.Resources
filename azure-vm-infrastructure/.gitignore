@@ -1,9 +1,12 @@
 ﻿# Terraform files
-*.tfstate
-*.tfstate.*
-*.tfplan
 .terraform/
 .terraform.lock.hcl
+**/providers/
+**/.terraform/
+terraform.tfstate*
+*.tfplan
+.terraformrc
+terraform.rc
 
 # Variable files with secrets
 *.tfvars
