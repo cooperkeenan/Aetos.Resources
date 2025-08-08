@@ -56,6 +56,12 @@ variable "github_user" {
   default     = "cooperkeenan"
 }
 
+variable "github_token" {
+  description = "GitHub personal access token"
+  type        = string
+  sensitive   = true
+}
+
 variable "repo_name" {
   description = "GitHub repository name"
   type        = string
