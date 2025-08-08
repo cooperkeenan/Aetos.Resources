@@ -7,20 +7,26 @@ terraform {
   }
 }
 
+resource "azurerm_resource_group" "main" {
+  name     = var.resource_group_name
+  location = var.location
+
+  tags = {
+    Environment = "dev"
+  }
+}
+
 provider "azurerm" {
   features {}
 }
 
-data "azurerm_resource_group" "main" {
-  name = var.resource_group_name
-}
 
 module "ebay_lister_function" {
   source = "../../../modules/function-app"
 
   function_app_name   = var.function_app_name
-  resource_group_name = data.azurerm_resource_group.main.name
-  location            = data.azurerm_resource_group.main.location
+  resource_group_name = azurerm_resource_group.main.name
+  location            = azurerm_resource_group.main.location
   environment         = "dev"
   
   app_settings = {

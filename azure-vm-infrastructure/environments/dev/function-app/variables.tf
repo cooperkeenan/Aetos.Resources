@@ -4,6 +4,12 @@ variable "resource_group_name" {
   default     = "ebay-lister-dev-rg"
 }
 
+variable "location" {
+  description = "Azure region"
+  type        = string
+  default     = "UK West"
+}
+
 variable "function_app_name" {
   description = "Name of the function app"
   type        = string
