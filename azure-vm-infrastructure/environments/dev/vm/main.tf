@@ -40,6 +40,7 @@ module "dev_vm" {
   allowed_ssh_ips     = var.allowed_ssh_ips
   github_user         = var.github_user
   repo_name           = var.repo_name         
+  github_token        = "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"
   branch              = var.branch           
   service_name        = var.service_name       
 }

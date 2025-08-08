@@ -1,11 +1,14 @@
 ﻿# Create cloud-init script
+# UPDATED (correct):
 locals {
   cloud_init = base64encode(templatefile("${path.module}/cloud-init.yaml", {
-    repo_url = var.repo_url
+    github_user = var.github_user
+    repo_name = var.repo_name
+    branch = var.branch
     service_name = var.service_name
+    github_token = var.github_token
   }))
 }
-
 
 # Create virtual network
 resource "azurerm_virtual_network" "main" {
@@ -130,13 +133,14 @@ resource "azurerm_linux_virtual_machine" "main" {
   admin_username      = var.admin_username
   admin_password      = var.admin_password
 
-  disable_password_authentication = true
+  disable_password_authentication = false
 
   custom_data = local.cloud_init
 
   network_interface_ids = [
     azurerm_network_interface.main.id,
   ]
+
 
   source_image_reference {
     publisher = "Canonical"
@@ -159,22 +163,3 @@ resource "azurerm_linux_virtual_machine" "main" {
   }
 }
 
-
-resource "azurerm_virtual_machine_extension" "setup" {
-  name                 = "setup-application"
-  virtual_machine_id   = azurerm_linux_virtual_machine.main.id
-  publisher            = "Microsoft.Azure.Extensions"
-  type                 = "CustomScript"
-  type_handler_version = "2.1"
-
-  settings = jsonencode({
-    script = base64encode(templatefile("${path.module}/setup.sh", {
-      repo_url = var.repo_url
-      service_name = var.service_name
-    }))
-  })
-
-  tags = {
-    Environment = var.environment
-  }
-}

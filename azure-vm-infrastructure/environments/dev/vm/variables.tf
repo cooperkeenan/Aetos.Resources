@@ -62,23 +62,10 @@ variable "repo_name" {
   default     = "Aetos.Searcher"
 }
 
-variable "repo_url" {
-  description = "GitHub repository url"
-  type        = string
-  default     = "https://github.com/cooperkeenan/Aetos.Searcher"
-}
-
-
 variable "branch" {
   description = "Git branch to use"
   type        = string
   default     = "main"
-}
-
-variable "github_token" {
-  description = "GitHub personal access token for private repos"
-  type        = string
-  sensitive   = true
 }
 
 variable "service_name" {
@@ -86,4 +73,3 @@ variable "service_name" {
   type        = string
   default     = "aetos-autorun"
 }
-
